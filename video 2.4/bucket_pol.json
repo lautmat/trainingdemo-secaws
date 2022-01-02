@@ -1,0 +1,26 @@
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "AllowNewKeypairPrincipal",
+			"Principal": {"AWS": "arn:aws:iam::140795070074:role/service-role/newKeypair-role-jkvk4qnd"},
+			"Effect": "Allow",
+			"Action": [
+				"s3:PutObjectTagging",
+				"s3:PutObject"
+			],
+			"Resource": [
+				"arn:aws:s3:::privkeys-23487/*"
+			]
+		},
+		{
+			"Sid": "AllowGetPrivkeyPrincipal",
+			"Principal": {"AWS": "arn:aws:iam::140795070074:role/service-role/getPrivkey-role-v909v3y7"},
+			"Effect": "Allow",
+			"Action": "s3:GetObject",
+			"Resource": [
+				"arn:aws:s3:::privkeys-23487/*"
+			]
+		}
+	]
+}

@@ -1,0 +1,34 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::mybucketdemo-9823/*",
+            "Condition": {
+                "StringEquals": {
+                    "s3:ExistingObjectTag/Customer": "${aws:PrincipalTag/Customer}",
+                    "s3:ExistingObjectTag/Team": "Network"
+                }
+            }
+        },
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Deny",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::mybucketdemo-9823/*",
+            "Condition": {
+                "StringEquals": {
+                    "s3:ExistingObjectTag/Classification": "Confidential"
+                },
+                "StringNotEquals": {
+                    "aws:PrincipalTag/Clearance": [
+                        "Confidential",
+                        "Secret"
+                    ]
+                }
+            }
+        }
+    ]
+}

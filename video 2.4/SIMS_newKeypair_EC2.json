@@ -1,0 +1,25 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "CreateKeyPairWithTag",
+            "Effect": "Allow",
+            "Action": "ec2:CreateKeyPair",
+            "Resource": "arn:aws:ec2:*:140795070074:key-pair/*"
+        },
+        {
+            "Sid": "TaggingConditions",
+            "Effect": "Allow",
+            "Action": "ec2:CreateTags",
+            "Resource": "arn:aws:ec2:*:140795070074:key-pair/*",
+            "Condition": {
+                "StringEquals": {
+                    "ec2:CreateAction": "CreateKeyPair"
+                },
+                "ForAnyValue:StringEquals": {
+                    "aws:TagKeys": "Owner"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "StartInstanceWithTag",
+            "Effect": "Allow",
+            "Action": "ec2:StartInstances",
+            "Resource": "arn:aws:ec2:*:140795070074:instance/*",
+            "Condition": {
+                "StringEquals": {
+                    "ec2:ResourceTag/LaunchedBy": "SIMS"
+                }
+            }
+        }
+    ]
+}
