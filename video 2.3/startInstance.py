@@ -4,16 +4,18 @@ import boto3
 #Setting default values
 region="us-east-1"
 
-ec2 = boto3.client("ec2", region_name=region)
-
 def lambda_handler(event, context):
 
     try:
-        if 'instanceid' in event:
-            instanceid = event.get('instanceid')
-        else:    
-            instanceid = json.loads(event['Records'][0]["body"]).get('instanceid')
-
+        print("Event received from Lambda's trigger " + str(event))
+        
+        #Parameters from Lambda test event, SQS queue or API Gateway trigger
+        if 'instanceid' in event: instanceid = event.get('instanceid')
+        elif 'Records' in event: instanceid = json.loads(event['Records'][0]["body"]).get('instanceid')
+        else: instanceid = json.loads(event['body']).get('instanceid')
+        
+        ec2 = boto3.client("ec2", region_name=region)
+        
         StartInstance = ec2.start_instances(
             InstanceIds=[instanceid]          
             )

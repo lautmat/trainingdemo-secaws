@@ -1,0 +1,33 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "UploadPrivKey",
+            "Effect": "Allow",
+            "Action": "s3:PutObject",
+            "Resource": "arn:aws:s3:::privkey-store/*"
+        },
+        {
+            "Sid": "TagPrivKey",
+            "Effect": "Allow",
+            "Action": "s3:PutObjectTagging",
+            "Resource": "arn:aws:s3:::privkey-store/*",
+            "Condition": {
+                "StringLike": {
+                    "s3:RequestObjectTag/Owner": "${cognito-identity.amazonaws.com:sub}"
+                }
+            }
+        },
+        {
+            "Sid": "GetPrivKey",
+            "Effect": "Allow",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::privkey-store/*",
+            "Condition": {
+                "StringLike": {
+                    "s3:ExistingObjectTag/Owner": "${cognito-identity.amazonaws.com:sub}"
+                }
+            }
+        }
+    ]
+}

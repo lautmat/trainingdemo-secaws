@@ -6,18 +6,25 @@ import os
 region="us-east-1"
 owner="default"
 
-ec2 = boto3.client("ec2", region_name=region)
-s3 = boto3.client("s3")
-
 def lambda_handler(event, context):
 
-    global owner
-    if 'owner' in event: owner = event.get('owner')
-
     try:
-        keypair_name = event.get('keyname')
-        s3_bucket = event.get('s3')
+        print("Event received from Lambda's trigger " + str(event))
         
+        global owner
+        
+        #Parameters from Lambda test event or API Gateway trigger
+        if 'keyname' in event: keypair_name = event.get('keyname')
+        else: keypair_name = json.loads(event['body']).get('keyname')
+        if 's3' in event: s3_bucket = event.get('s3')
+        else: s3_bucket = json.loads(event['body']).get('s3')
+        if 'owner' in event: owner = event.get('owner')
+        elif 'body' in event: owner = json.loads(event['body']).get('owner')
+        
+        ec2 = boto3.client("ec2", region_name=region)
+        
+        s3 = boto3.client("s3")
+
         key_pair = ec2.create_key_pair(KeyName=keypair_name,TagSpecifications=[{'ResourceType':'key-pair','Tags':[{'Key':'Owner','Value':owner},]},])
         private_key = key_pair["KeyMaterial"]
         file_name = '/tmp/' + keypair_name +'.pem'

@@ -5,14 +5,19 @@ import boto3
 region="us-east-1"
 owner="default"
 
-ec2 = boto3.client("ec2", region_name=region)
-
 def lambda_handler(event, context):
 
-    global owner
-    if 'owner' in event: owner = event.get('owner')
-
     try:
+        print("Event received from Lambda's trigger " + str(event))
+        
+        global owner
+                
+        #Parameters from Lambda test event or API Gateway trigger
+        if 'owner' in event: owner = event.get('owner')
+        elif 'body' in event: owner = json.loads(event['body']).get('owner')        
+        
+        ec2 = boto3.client("ec2", region_name=region)
+        
         instances = [ ]
         GetInstance = ec2.describe_instances(Filters=[
             {
@@ -27,7 +32,6 @@ def lambda_handler(event, context):
         for reservation in GetInstance:
             for instance in reservation["Instances"]:
                 instance_id = instance["InstanceId"]
-                print(f"{instance_id}")
             instances.append(instance_id)
         return {
             "statusCode": 200,

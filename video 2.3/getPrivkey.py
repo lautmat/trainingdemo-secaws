@@ -5,13 +5,19 @@ import os
 #Setting default values
 region="us-east-1"
 
-s3 = boto3.client("s3")
-
 def lambda_handler(event, context):
 
     try:
-        object_name = event.get('objectname')
-        s3_bucket = event.get('s3')
+        print("Event received from Lambda's trigger " + str(event))
+        
+        #Parameters from Lambda test event or API Gateway trigger
+        if 'objectname' in event: object_name = event.get('objectname')
+        else: object_name = json.loads(event['body']).get('objectname')
+        if 's3' in event: s3_bucket = event.get('s3')
+        else: s3_bucket = json.loads(event['body']).get('s3')
+
+        
+        s3 = boto3.client("s3")
         
         response = s3.get_object(Bucket=s3_bucket, Key=object_name)
         return {
