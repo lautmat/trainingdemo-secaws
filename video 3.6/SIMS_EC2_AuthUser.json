@@ -9,7 +9,7 @@
                 "ec2:StartInstances",
                 "ec2:StopInstances"
             ],
-            "Resource": "arn:aws:ec2:*:759642557178:instance/*",
+            "Resource": "arn:aws:ec2:*:140795070074:instance/*",
             "Condition": {
                 "StringLike": {
                     "aws:ResourceTag/Owner": "${cognito-identity.amazonaws.com:sub}"
@@ -38,18 +38,18 @@
             "Sid": "CreateKeyPairEC2",
             "Effect": "Allow",
             "Action": "ec2:CreateKeyPair",
-            "Resource": "arn:aws:ec2:*:759642557178:key-pair/*"
+            "Resource": "arn:aws:ec2:*:140795070074:key-pair/*"
         },
         {
             "Sid": "LaunchInstance",
             "Effect": "Allow",
             "Action": "ec2:RunInstances",
             "Resource": [
-                "arn:aws:ec2:*:759642557178:volume/*",
-                "arn:aws:ec2:*:759642557178:instance/*",
-                "arn:aws:ec2:*:759642557178:network-interface/*",
-                "arn:aws:ec2:*:759642557178:security-group/*",
-                "arn:aws:ec2:*:759642557178:subnet/*",
+                "arn:aws:ec2:*:140795070074:volume/*",
+                "arn:aws:ec2:*:140795070074:instance/*",
+                "arn:aws:ec2:*:140795070074:network-interface/*",
+                "arn:aws:ec2:*:140795070074:security-group/*",
+                "arn:aws:ec2:*:140795070074:subnet/*",
                 "arn:aws:ec2:*::image/*"
             ]
         },

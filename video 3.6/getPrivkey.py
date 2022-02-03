@@ -23,7 +23,7 @@ def lambda_handler(event, context):
         else: s3_bucket = json.loads(event['body']).get('s3')
 
         if 'id_token' in event: id_token = event.get('id_token')
-        else: id_token = (event['headers']).get('token')
+        else: id_token = (event['headers']).get('id_token')
 
         identity_client = boto3.client('cognito-identity')
         identity_response = identity_client.get_id(IdentityPoolId=IDENTITY_POOL_ID,Logins={PROVIDER: id_token})

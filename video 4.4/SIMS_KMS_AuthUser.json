@@ -1,0 +1,43 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "ActionsonKMSkeywithconditioncognitouseridmatchestag",
+            "Effect": "Allow",
+            "Action": [
+                "kms:Decrypt",
+                "kms:TagResource",
+                "kms:Encrypt",
+                "kms:GenerateDataKey",
+                "kms:CreateAlias",
+                "kms:GenerateDataKeyWithoutPlaintext",
+                "kms:DescribeKey",
+                "kms:GenerateDataKeyPairWithoutPlaintext",
+                "kms:GenerateDataKeyPair"
+            ],
+            "Resource": "arn:aws:kms:*:*:key/*",
+            "Condition": {
+                "StringEquals": {
+                    "aws:ResourceTag/Owner": "${cognito-identity.amazonaws.com:sub}"
+                }
+            }
+        },
+        {
+            "Sid": "CreateKMSkeywithconditioncognitouseridmatchestag",
+            "Effect": "Allow",
+            "Action": "kms:CreateKey",
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "aws:ResourceTag/Owner": "${cognito-identity.amazonaws.com:sub}"
+                }
+            }
+        },
+        {
+            "Sid": "CreateAliasdoesnotsupporttagcondition",
+            "Effect": "Allow",
+            "Action": "kms:CreateAlias",
+            "Resource": "arn:aws:kms:*:*:alias/*"
+        }
+    ]
+}
