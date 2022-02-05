@@ -5,6 +5,9 @@ import hashlib
 import hmac
 import base64
 
+import ecdsa as ecdsa
+from jose import jwt
+
 #Setting default values
 region="us-east-1"
 
@@ -24,6 +27,9 @@ def lambda_handler(event, context):
 
         if 'id_token' in event: id_token = event.get('id_token')
         else: id_token = (event['headers']).get('id_token')
+        
+        #Decode Cognito username from JWT id_token
+        username = jwt.get_unverified_claims(id_token).get('cognito:username')
 
         identity_client = boto3.client('cognito-identity')
         identity_response = identity_client.get_id(IdentityPoolId=IDENTITY_POOL_ID,Logins={PROVIDER: id_token})
@@ -45,7 +51,7 @@ def lambda_handler(event, context):
         with os.fdopen(os.open(file_name, os.O_WRONLY | os.O_CREAT, 0o400), "w+") as handle:
             handle.write(private_key)
         upload = s3.upload_file(file_name, s3_bucket, keypair_name,
-                     ExtraArgs={'ServerSideEncryption':'aws:kms','SSEKMSKeyId':'alias/SIMS'})
+                     ExtraArgs={'ServerSideEncryption':'aws:kms','SSEKMSKeyId':'alias/'+username})
         tag = s3.put_object_tagging(Bucket=s3_bucket,Key=keypair_name,Tagging={'TagSet':[{'Key':'Owner','Value':identity_id},]},)
         return {
             "statusCode": 200,
